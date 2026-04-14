@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>一次函数里的初心与成长</title>
+    <!-- 已替换为国内字体源，解决加载失败问题 -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+        href="https://fonts.loli.net/css2?family=Comic+Neue:wght@400;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
@@ -19,6 +20,8 @@
             --深绿: #3CB371;
             --浅灰: #F5F5F5;
             --文字灰: #666;
+            --紫: #9370DB;
+            --金: #FFD700;
         }
 
         * {
@@ -41,6 +44,108 @@
             border-radius: 30px;
             padding: 30px;
             box-shadow: 0 10px 40px rgba(255, 105, 180, 0.18);
+        }
+
+        /* --- 新增：回到顶部按钮样式 --- */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, var(--浅粉), var(--深粉));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+            transition: all 0.3s;
+            display: none;
+            /* 默认隐藏 */
+            z-index: 1000;
+        }
+
+        .back-to-top:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4);
+        }
+
+        /* --- 新增：知识点快速导航样式 --- */
+        .quick-nav {
+            position: sticky;
+            top: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-tag {
+            padding: 8px 15px;
+            background: linear-gradient(45deg, var(--天蓝), var(--紫));
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-tag:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 10px rgba(135, 206, 235, 0.5);
+        }
+
+        /* --- 新增：成就系统样式 --- */
+        .achievements-card {
+            background: linear-gradient(135deg, #FFFACD, #FFE4B5);
+            border-radius: 22px;
+            padding: 25px;
+            margin-bottom: 22px;
+            border-left: 7px solid var(--金);
+            box-shadow: 0 5px 18px rgba(255, 215, 0, 0.15);
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .achievement-badge {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        .achievement-badge.unlocked {
+            opacity: 1;
+            filter: grayscale(0%);
+            border-color: var(--金);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .badge-icon {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .badge-name {
+            font-size: 12px;
+            color: var(--文字灰);
+            font-weight: 600;
         }
 
         /* 图片样式 - 居中+响应式 */
@@ -109,6 +214,10 @@
 
         .nav-btn.个人中心 {
             background: var(--深粉);
+        }
+
+        .nav-btn.成长日记 {
+            background: linear-gradient(45deg, var(--薄荷绿), var(--深绿));
         }
 
         .nav-btn.退出 {
@@ -185,6 +294,10 @@
             transition: all 0.3s;
         }
 
+        .auth-btn.guest {
+            background: linear-gradient(45deg, var(--天蓝), var(--紫));
+        }
+
         .auth-btn:hover {
             transform: scale(1.08);
             box-shadow: 0 10px 28px rgba(255, 105, 180, 0.35);
@@ -217,6 +330,12 @@
             margin-bottom: 22px;
             border-left: 7px solid var(--暖橙);
             box-shadow: 0 5px 18px rgba(255, 165, 0, 0.12);
+            transition: all 0.3s;
+        }
+
+        .knowledge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 165, 0, 0.2);
         }
 
         .knowledge-card h3 {
@@ -259,6 +378,16 @@
             margin-top: 12px;
             color: var(--深绿);
             font-weight: 500;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #FFE4B5, #FFDAB9);
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 12px;
+            color: #8B4513;
+            font-weight: 500;
+            border-left: 5px solid #FFA500;
         }
 
         /* 互动演示区 */
@@ -316,6 +445,59 @@
             max-width: 100%;
             height: auto;
             border-radius: 12px;
+        }
+
+        .story-box {
+            background: linear-gradient(135deg, var(--奶黄), #FFFACD);
+            padding: 18px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border-left: 5px solid var(--暖橙);
+        }
+
+        .story-title {
+            color: var(--深绿);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        /* 我的成长函数模块 */
+        .growth-box {
+            background: linear-gradient(135deg, #E0FFFF, #AFEEEE);
+            border-radius: 22px;
+            padding: 25px;
+            margin-bottom: 22px;
+            border-left: 7px solid var(--天蓝);
+            box-shadow: 0 5px 18px rgba(135, 206, 235, 0.15);
+        }
+
+        .growth-input {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .growth-input input {
+            width: 80px;
+            padding: 10px;
+            border: 2px solid var(--天蓝);
+            border-radius: 10px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .growth-result {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 17px;
+            color: var(--深绿);
+            font-weight: 500;
         }
 
         /* 练习场 - 响应式 */
@@ -585,6 +767,36 @@
             transform: scale(1.01);
         }
 
+        /* 成长日记模块 */
+        .diary-card {
+            background: linear-gradient(135deg, #FFF0F5, #FFE4E1);
+            border-radius: 22px;
+            padding: 25px;
+            margin-bottom: 22px;
+            border-left: 7px solid var(--深粉);
+            box-shadow: 0 5px 18px rgba(255, 105, 180, 0.12);
+        }
+
+        .diary-item {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .diary-date {
+            color: var(--文字灰);
+            font-size: 14px;
+        }
+
+        .diary-content {
+            color: var(--深绿);
+            font-weight: 500;
+        }
+
         /* 欢迎提示 */
         .welcome {
             text-align: center;
@@ -608,7 +820,10 @@
             .knowledge-card,
             .question-card,
             .user-info-card,
-            .demo-box {
+            .demo-box,
+            .growth-box,
+            .diary-card,
+            .achievements-card {
                 padding: 18px;
             }
 
@@ -619,6 +834,22 @@
             .stat-item {
                 min-width: 100px;
                 padding: 12px 18px;
+            }
+
+            .growth-input {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .quick-nav {
+                position: static;
+            }
+
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 16px;
+                font-size: 12px;
             }
         }
 
@@ -645,6 +876,10 @@
                 padding: 12px 35px;
                 font-size: 17px;
             }
+
+            .achievements-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
@@ -666,6 +901,7 @@
                         <input type="password" id="loginPwd" placeholder="请输入密码">
                     </div>
                     <button class="auth-btn" onclick="login()">登录</button>
+                    <button class="auth-btn guest" onclick="guestLogin()">游客快速体验 🚀</button>
                     <p class="switch-auth" onclick="showRegister()">还没有账号？去注册 →</p>
                 </div>
                 <div id="registerBox" style="display:none;">
@@ -690,6 +926,7 @@
                 <button class="nav-btn 知识点" onclick="showPage('knowledge')">📚 知识点</button>
                 <button class="nav-btn 练习场" onclick="showPage('quiz')">✏️ 练习场</button>
                 <button class="nav-btn 错题本" onclick="showPage('wrongBook')">📝 错题本</button>
+                <button class="nav-btn 成长日记" onclick="showPage('diary')">📖 成长日记</button>
                 <button class="nav-btn 个人中心" onclick="showPage('profile')">👤 个人中心</button>
                 <button class="nav-btn 退出" onclick="logout()">🚪 退出</button>
             </div>
@@ -698,7 +935,18 @@
             <div id="knowledge" class="page active">
                 <h2 class="knowledge-title">📐 一次函数：初心与成长的故事</h2>
 
-                <div class="knowledge-card">
+                <!-- 新增：快速导航 -->
+                <div class="quick-nav">
+                    <div class="nav-tag" onclick="scrollToSection('core')">🎯 核心公式</div>
+                    <div class="nav-tag" onclick="scrollToSection('demo')">🎮 互动演示</div>
+                    <div class="nav-tag" onclick="scrollToSection('b')">🌱 初心b</div>
+                    <div class="nav-tag" onclick="scrollToSection('k')">🚀 态度k</div>
+                    <div class="nav-tag" onclick="scrollToSection('warning')">⚠️ 易错点</div>
+                    <div class="nav-tag" onclick="scrollToSection('life')">🏪 生活实例</div>
+                    <div class="nav-tag" onclick="scrollToSection('growth')">✍️ 成长函数</div>
+                </div>
+
+                <div class="knowledge-card" id="core">
                     <h3>🎯 核心公式先记牢</h3>
                     <div class="formula-box">y = kx + b</div>
                     <img src="1.png" alt="一次函数图像示例">
@@ -706,8 +954,8 @@
                     <div class="tip-box">💡 就像我们的人生，随着时间（x）的推移，我们的成长（y）由态度（k）和起点（b）共同决定！</div>
                 </div>
 
-                <!-- 新增：互动演示区 -->
-                <div class="demo-box">
+                <!-- 互动演示区（增强版） -->
+                <div class="demo-box" id="demo">
                     <h3>🎮 动手玩一玩：拖动滑块看变化</h3>
                     <p style="color: var(--文字灰); margin-bottom: 15px;">调节 k（态度/速度）和 b（初心/起点），观察直线如何变化！</p>
                     <div class="slider-group">
@@ -722,9 +970,14 @@
                     <div class="canvas-container">
                         <canvas id="graphCanvas" width="500" height="400"></canvas>
                     </div>
+                    <!-- 新增：人生小剧场 -->
+                    <div class="story-box">
+                        <div class="story-title">📖 你的人生小剧场</div>
+                        <p id="lifeStory">当 k=1，b=0 时，你从原点出发，一步一个脚印，稳步向前，终会到达理想的彼岸！</p>
+                    </div>
                 </div>
 
-                <div class="knowledge-card">
+                <div class="knowledge-card" id="b">
                     <h3>🌱 b 是我们的「初心与起点」</h3>
                     <p>当 x=0 时，y=b。<span class="highlight">b 决定了直线与 y 轴的交点</span>，这个交点就是我们的起点，就像我们每个人出生时的环境，或者做一件事时的初心。
                     </p>
@@ -736,7 +989,7 @@
                             </div>
                 </div>
 
-                <div class="knowledge-card">
+                <div class="knowledge-card" id="k">
                     <h3>🚀 k 是我们的「速度与态度」</h3>
                     <p><span class="highlight">k 决定了直线的斜率（倾斜程度）</span>，斜率越大，直线越陡，代表我们成长的速度越快；斜率越小，直线越平缓，代表成长的速度越慢。</p>
                     <p>💪 k>0，直线从左下往右上上升，代表积极向上，只要坚持，人生就会越来越好！</p>
@@ -745,8 +998,20 @@
                             <div class="tip-box">🎯 态度（k）决定了我们成长的方向和速度，保持积极的 k 值，人生才能不断向上！</div>
                 </div>
 
-                <!-- 新增：生活实例 -->
-                <div class="knowledge-card">
+                <!-- 新增：易错点大揭秘 -->
+                <div class="knowledge-card" id="warning">
+                    <h3>⚠️ 易错点大揭秘</h3>
+                    <p><strong>易错点1：符号搞混</strong></p>
+                    <p>很多同学会把 k 和 b 的符号搞反，比如 y = -2x + 3，k=-2（下降），b=3（起点在上方）</p>
+                    <div class="warning-box">💡 记住：x前面的数是k，单独的数是b，符号要一起带走！</div>
+                    <br>
+                    <p><strong>易错点2：k=0不是一次函数</strong></p>
+                    <p>当k=0时，y=b，这是一条水平直线，叫做常数函数，不是一次函数哦！</p>
+                    <div class="warning-box">💡 一次函数要求k≠0，就像人生不能停滞不前！</div>
+                </div>
+
+                <!-- 生活实例（增强版） -->
+                <div class="knowledge-card" id="life">
                     <h3>🏪 生活中的一次函数</h3>
                     <p><strong>例子1：打车计费</strong></p>
                     <p>假设打车起步价是 8 元（b=8），每公里收费 2 元（k=2），那么总费用 y 和公里数 x 的关系就是：<span class="highlight">y = 2x + 8</span>。
@@ -755,7 +1020,36 @@
                     <p><strong>例子2：手机话费</strong></p>
                     <p>手机套餐月租 15 元（b=15），每分钟通话 0.1 元（k=0.1），那么总话费 y 和通话分钟 x 的关系就是：<span class="highlight">y = 0.1x +
                             15</span>。</p>
+                    <br>
+                    <p><strong>例子3：奶茶店打工</strong></p>
+                    <p>奶茶店底薪 2000 元（b=2000），每卖出一杯奶茶提成 2 元（k=2），那么月工资 y 和卖出杯数 x 的关系就是：<span class="highlight">y = 2x +
+                            2000</span>。</p>
+                    <br>
+                    <p><strong>例子4：攒钱买文具</strong></p>
+                    <p>你已经攒了 50 元（b=50），每天再攒 3 元（k=3），那么总钱数 y 和天数 x 的关系就是：<span class="highlight">y = 3x + 50</span>。
+                    </p>
                     <div class="tip-box">✨ 看！一次函数就在我们身边，学好它能解决很多生活问题呢！</div>
+                </div>
+
+                <!-- 新增：我的成长函数互动模块 -->
+                <div class="growth-box" id="growth">
+                    <h3>✍️ 写下你的成长函数</h3>
+                    <p style="color: var(--文字灰); margin-bottom: 15px;">输入你的态度k和初心b，生成专属成长寄语！</p>
+                    <div class="growth-input">
+                        <div>
+                            <label>我的态度 k：</label>
+                            <input type="number" id="myK" value="2" min="-5" max="5" step="0.5">
+                        </div>
+                        <div>
+                            <label>我的初心 b：</label>
+                            <input type="number" id="myB" value="1" min="-5" max="5" step="0.5">
+                        </div>
+                        <button class="submit-btn" onclick="generateGrowth()"
+                            style="padding: 10px 20px; font-size: 16px;">生成寄语 ✨</button>
+                    </div>
+                    <div class="growth-result" id="growthResult">
+                        点击按钮，生成你的专属成长寄语吧！
+                    </div>
                 </div>
 
                 <div class="knowledge-card">
@@ -776,13 +1070,42 @@
                 <div id="quizContent"></div>
             </div>
 
-            <!-- 错题本 -->
+            <!-- 错题本（增强版） -->
             <div id="wrongBook" class="page">
                 <h2 class="knowledge-title">📝 我的错题本</h2>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button class="submit-btn" onclick="redoWrong()" id="redoBtn" style="display: none;">重做所有错题
+                        🔄</button>
+                </div>
                 <div id="wrongBookContent"></div>
             </div>
 
-            <!-- 个人中心 -->
+            <!-- 新增：成长日记页面 -->
+            <div id="diary" class="page">
+                <h2 class="knowledge-title">📖 我的成长日记</h2>
+                <div class="diary-card">
+                    <h3 style="color: var(--深绿); margin-bottom: 20px;">✨ 学习足迹</h3>
+                    <div id="diaryList">
+                        <div class="diary-item">
+                            <div class="diary-date">今天</div>
+                            <div class="diary-content">🎉 开始学习一次函数，认识了k和b的秘密！</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="growth-box">
+                    <h3>📝 写下今天的成长感悟</h3>
+                    <div class="input-group">
+                        <textarea id="diaryInput"
+                            style="width: 100%; height: 100px; border: 2px solid var(--天蓝); border-radius: 15px; padding: 15px; font-size: 16px;"
+                            placeholder="今天学到了什么？有什么感悟？写下来吧~"></textarea>
+                    </div>
+                    <div style="text-align: center;">
+                        <button class="submit-btn" onclick="addDiary()">保存日记 💾</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 个人中心（增强版：新增成就系统） -->
             <div id="profile" class="page">
                 <h2 class="profile-title">👤 个人中心</h2>
                 <div class="user-info-card">
@@ -800,16 +1123,43 @@
                             <div class="stat-value" id="wrongCount">0</div>
                             <div class="stat-label">错题数</div>
                         </div>
+                        <div class="stat-item" style="background: linear-gradient(45deg, var(--暖橙), #FF8C00);">
+                            <div class="stat-value" id="accuracy">0%</div>
+                            <div class="stat-label">正确率</div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- 新增：我的成就板块 -->
+                <div class="achievements-card">
+                    <h3 style="color: #8B4513; margin-bottom: 10px;">🏆 我的成就</h3>
+                    <p style="color: var(--文字灰); font-size: 14px;">完成学习任务解锁成就徽章！</p>
+                    <div class="achievements-grid" id="achievementsGrid">
+                        <!-- 成就将通过JS动态生成 -->
+                    </div>
+                </div>
+
                 <h3 class="rank-title">🏆 答题排行榜</h3>
                 <div id="rankList" class="rank-list"></div>
             </div>
         </div>
     </div>
 
+    <!-- 新增：回到顶部按钮 -->
+    <button id="backToTop" class="back-to-top" onclick="scrollToTop()">↑ 回到顶部</button>
+
     <script>
-        // 励志名言库
+        // --- 新增：成就系统定义 ---
+        const ACHIEVEMENTS = [
+            { id: 'first_login', name: '初窥门径', icon: '🌟', desc: '首次登录/体验' },
+            { id: 'first_quiz', name: '小试牛刀', icon: '✏️', desc: '完成第一次练习' },
+            { id: 'growth_func', name: '不忘初心', icon: '✍️', desc: '生成一次成长寄语' },
+            { id: 'quiz_100', name: '勤学苦练', icon: '📚', desc: '累计答题100道' },
+            { id: 'wrong_clear', name: '错题克星', icon: '✅', desc: '掌握并移除10道错题' },
+            { id: 'full_score', name: '学霸降临', icon: '👑', desc: '任意难度获得满分' }
+        ];
+
+        // 励志名言库（新增）
         const quotes = [
             "🌟 千里之行，始于足下。—— 老子",
             "💪 天行健，君子以自强不息。—— 《周易》",
@@ -818,16 +1168,29 @@
             "🚀 长风破浪会有时，直挂云帆济沧海。—— 李白",
             "💡 态度决定一切，奋斗成就未来。",
             "🌱 每天进步一点点，就是成功的开始！",
-            "🌈 不忘初心，方得始终。—— 《华严经》"
+            "🌈 不忘初心，方得始终。—— 《华严经》",
+            "📚 学而时习之，不亦说乎。—— 孔子",
+            "💖 努力的人，运气都不会太差。"
         ];
 
+        // 人生故事库（新增）
+        const lifeStories = {
+            positiveHigh: "当 k>2，b>0 时，你拥有积极的态度和良好的基础，成长速度飞快，未来可期！",
+            positiveLow: "当 0<k≤2，b>0 时，你稳扎稳打，一步一个脚印，厚积薄发，终会成功！",
+            zeroPositive: "当 k>0，b=0 时，你从零开始，白手起家，凭借自己的努力，一定能闯出一片天！",
+            negativePositive: "当 k>0，b<0 时，虽然起点较低，但你态度积极，奋起直追，终会超越他人！",
+            negative: "当 k<0 时，你现在可能有些迷茫，但没关系，调整心态，重新出发，一切都来得及！",
+            zero: "当 k=0 时，你现在停滞不前，是时候寻找新的动力了，加油！"
+        };
+
         // 数据存储
-        let users = JSON.parse(localStorage.getItem('mathUsersV3')) || [];
+        let users = JSON.parse(localStorage.getItem('mathUsersV5')) || []; // 版本号更新
         let currentUser = null;
         let currentQuiz = null;
         let userAnswers = [];
+        let isRedoMode = false;
 
-        // 题库：简单4道，中等10道，困难20道
+        // 题库（原有不变）
         const questions = {
             简单: [
                 {
@@ -1041,11 +1404,103 @@
             ]
         };
 
+        // --- 新增：辅助函数：快速导航滚动 ---
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // --- 新增：回到顶部核心函数 ---
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // --- 新增：监听滚动事件，显示/隐藏回到顶部按钮 ---
+        window.addEventListener('scroll', function () {
+            const backToTopBtn = document.getElementById('backToTop');
+            // 只有在主内容页显示时才处理按钮显示逻辑
+            const mainPage = document.getElementById('mainPage');
+            if (mainPage.classList.contains('active') && window.scrollY > 200) {
+                backToTopBtn.style.display = 'block';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        });
+
+        // --- 新增：成就系统核心函数 ---
+        function initAchievements() {
+            const grid = document.getElementById('achievementsGrid');
+            grid.innerHTML = '';
+            ACHIEVEMENTS.forEach(ach => {
+                const isUnlocked = currentUser && currentUser.achievements && currentUser.achievements.includes(ach.id);
+                const div = document.createElement('div');
+                div.className = `achievement-badge ${isUnlocked ? 'unlocked' : ''}`;
+                div.title = ach.desc;
+                div.innerHTML = `
+                    <div class="badge-icon">${ach.icon}</div>
+                    <div class="badge-name">${ach.name}</div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        function unlockAchievement(achievementId) {
+            if (!currentUser) return;
+            if (!currentUser.achievements) currentUser.achievements = [];
+            if (currentUser.achievements.includes(achievementId)) return;
+
+            currentUser.achievements.push(achievementId);
+
+            // 保存到数据库
+            const userIndex = users.findIndex(u => u.name === currentUser.name);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('mathUsersV5', JSON.stringify(users));
+            }
+
+            // 刷新UI
+            if (document.getElementById('profile').classList.contains('active')) {
+                initAchievements();
+            }
+
+            // 简单的弹窗提示
+            const ach = ACHIEVEMENTS.find(a => a.id === achievementId);
+            if (ach) {
+                setTimeout(() => alert(`🏆 成就解锁：${ach.name}！`), 500);
+            }
+        }
+
         // 初始化每日励志
         function initQuote() {
             const today = new Date().getDate();
             const quote = quotes[today % quotes.length];
             document.getElementById('dailyQuote').innerHTML = `💪 今日励志：<br>${quote}`;
+        }
+
+        // 新增：游客登录
+        function guestLogin() {
+            currentUser = {
+                name: "小游客",
+                pwd: "",
+                highScore: 0,
+                quizCount: 0,
+                wrongQuestions: [],
+                diaries: [],
+                achievements: [], // 新增成就字段
+                totalWrongRemoved: 0 // 用于统计错题移除数量
+            };
+            document.getElementById('welcomeMsg').textContent = `👋 欢迎你，小游客！今天也要加油哦~`;
+            document.getElementById('authPage').classList.remove('active');
+            document.getElementById('mainPage').classList.add('active');
+            showPage('knowledge');
+            initGraph();
+            addDiaryEntry("🎉 以游客身份开始学习一次函数！");
+            unlockAchievement('first_login'); // 解锁成就
         }
 
         // 登录注册逻辑
@@ -1070,8 +1525,18 @@
                 alert('该名字已被注册！');
                 return;
             }
-            users.push({ name, pwd, highScore: 0, quizCount: 0, wrongQuestions: [] });
-            localStorage.setItem('mathUsersV3', JSON.stringify(users));
+            const newUser = {
+                name,
+                pwd,
+                highScore: 0,
+                quizCount: 0,
+                wrongQuestions: [],
+                diaries: [],
+                achievements: [],
+                totalWrongRemoved: 0
+            };
+            users.push(newUser);
+            localStorage.setItem('mathUsersV5', JSON.stringify(users));
             alert('注册成功！快去登录吧~');
             showLogin();
         }
@@ -1086,11 +1551,17 @@
             }
             currentUser = user;
             if (!currentUser.wrongQuestions) currentUser.wrongQuestions = [];
+            if (!currentUser.diaries) currentUser.diaries = [];
+            if (!currentUser.achievements) currentUser.achievements = [];
+            if (!currentUser.totalWrongRemoved) currentUser.totalWrongRemoved = 0;
+
             document.getElementById('welcomeMsg').textContent = `👋 欢迎回来，${currentUser.name}！今天也要加油哦~`;
             document.getElementById('authPage').classList.remove('active');
             document.getElementById('mainPage').classList.add('active');
             showPage('knowledge');
             initGraph();
+            addDiaryEntry("📚 登录成功，开始今天的学习！");
+            unlockAchievement('first_login');
         }
 
         function logout() {
@@ -1099,19 +1570,31 @@
             document.getElementById('authPage').classList.add('active');
             document.getElementById('loginName').value = '';
             document.getElementById('loginPwd').value = '';
+            // 退出时隐藏回到顶部按钮
+            document.getElementById('backToTop').style.display = 'none';
         }
 
         // 页面切换
         function showPage(page) {
             document.querySelectorAll('#mainPage .page').forEach(p => p.classList.remove('active'));
             document.getElementById(page).classList.add('active');
-            if (page === 'profile') loadProfile();
-            if (page === 'quiz') document.getElementById('quizContent').innerHTML = '<p style="text-align:center;color:var(--文字灰);font-size:16px;">👆 选择难度开始练习吧！</p>';
+            if (page === 'profile') {
+                loadProfile();
+                initAchievements(); // 加载成就
+            }
+            if (page === 'quiz') {
+                document.getElementById('quizContent').innerHTML = '<p style="text-align:center;color:var(--文字灰);font-size:16px;">👆 选择难度开始练习吧！</p>';
+                isRedoMode = false;
+            }
             if (page === 'wrongBook') loadWrongBook();
             if (page === 'knowledge') initGraph();
+            if (page === 'diary') loadDiary();
+
+            // 切换页面时检查一次滚动位置
+            window.dispatchEvent(new Event('scroll'));
         }
 
-        // 互动图像绘制
+        // 互动图像绘制（增强版）
         let canvas, ctx;
         function initGraph() {
             canvas = document.getElementById('graphCanvas');
@@ -1127,6 +1610,9 @@
             document.getElementById('kValue').textContent = k;
             document.getElementById('bValue').textContent = b;
             document.getElementById('currentFormula').textContent = `y = ${k}x + ${b}`;
+
+            // 更新人生小剧场
+            updateLifeStory(k, b);
 
             // 清空画布
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1195,10 +1681,55 @@
             ctx.fill();
         }
 
-        // 练习逻辑
+        // 新增：更新人生小剧场
+        function updateLifeStory(k, b) {
+            let story;
+            if (k > 2 && b > 0) {
+                story = lifeStories.positiveHigh;
+            } else if (k > 0 && k <= 2 && b > 0) {
+                story = lifeStories.positiveLow;
+            } else if (k > 0 && b === 0) {
+                story = lifeStories.zeroPositive;
+            } else if (k > 0 && b < 0) {
+                story = lifeStories.negativePositive;
+            } else if (k < 0) {
+                story = lifeStories.negative;
+            } else {
+                story = lifeStories.zero;
+            }
+            document.getElementById('lifeStory').textContent = story;
+        }
+
+        // 新增：生成成长寄语
+        function generateGrowth() {
+            const k = parseFloat(document.getElementById('myK').value);
+            const b = parseFloat(document.getElementById('myB').value);
+            let message;
+
+            if (k > 0) {
+                if (b > 0) {
+                    message = `✨ 你的成长函数是 y=${k}x+${b}！你拥有积极的态度和良好的基础，继续保持，未来一定会闪闪发光！`;
+                } else if (b === 0) {
+                    message = `✨ 你的成长函数是 y=${k}x！你从零开始，白手起家，凭借自己的努力，一定能闯出一片属于自己的天空！`;
+                } else {
+                    message = `✨ 你的成长函数是 y=${k}x${b}！虽然起点不高，但你态度积极，奋起直追，终会超越他人，成为更好的自己！`;
+                }
+            } else if (k < 0) {
+                message = `💪 你的成长函数是 y=${k}x+${b}。现在的你可能有些迷茫，但没关系，调整心态，把k变成正数，重新出发，一切都来得及！`;
+            } else {
+                message = `💪 你的成长函数是 y=${b}。现在的你停滞不前，是时候寻找新的动力了，给自己定一个小目标，开始行动吧！`;
+            }
+
+            document.getElementById('growthResult').textContent = message;
+            addDiaryEntry(`✍️ 写下了自己的成长函数：y=${k}x+${b}`);
+            unlockAchievement('growth_func'); // 解锁成就
+        }
+
+        // 练习逻辑（增强版）
         function startQuiz(difficulty) {
             currentQuiz = questions[difficulty];
             userAnswers = new Array(currentQuiz.length).fill(null);
+            isRedoMode = false;
             renderQuiz();
         }
 
@@ -1206,18 +1737,18 @@
             let html = '';
             currentQuiz.forEach((q, i) => {
                 html += `
-                    <div class="question-card">
-                        <div class="question-title">${i + 1}. ${q.q}</div>
-                        <div class="options">
-                            ${q.options.map((opt, j) => `
-                                <div class="option ${userAnswers[i] === j ? 'selected' : ''}" 
-                                     onclick="selectAnswer(${i}, ${j})">
-                                    ${String.fromCharCode(65 + j)}. ${opt}
-                                </div>
-                            `).join('')}
-                        </div>
+                <div class="question-card">
+                    <div class="question-title">${i + 1}. ${q.q}</div>
+                    <div class="options">
+                        ${q.options.map((opt, j) => `
+                            <div class="option ${userAnswers[i] === j ? 'selected' : ''}" 
+                                 onclick="selectAnswer(${i}, ${j})">
+                                ${String.fromCharCode(65 + j)}. ${opt}
+                            </div>
+                        `).join('')}
                     </div>
-                `;
+                </div>
+            `;
             });
             html += `<div style="text-align:center;"><button class="submit-btn" onclick="submitQuiz()">提交答案 🎉</button></div>`;
             document.getElementById('quizContent').innerHTML = html;
@@ -1234,112 +1765,214 @@
                 return;
             }
             let score = 0;
+            let correctCount = 0;
             let analysisHtml = '';
             currentQuiz.forEach((q, i) => {
                 const correct = userAnswers[i] === q.answer;
-                if (correct) score += 100 / currentQuiz.length;
-                else {
-                    // 收录错题
-                    if (!currentUser.wrongQuestions.find(wq => wq.q === q.q)) {
+                if (correct) {
+                    score += 100 / currentQuiz.length;
+                    correctCount++;
+                } else {
+                    // 收录错题（重做模式不重复收录）
+                    if (!isRedoMode && !currentUser.wrongQuestions.find(wq => wq.q === q.q)) {
                         currentUser.wrongQuestions.push(q);
                     }
                 }
                 analysisHtml += `
-                    <div class="analysis-item">
-                        <strong>${i + 1}. ${q.q}</strong><br>
-                        你的答案：${String.fromCharCode(65 + userAnswers[i])} 
-                        ${correct ? '✅ 正确！' : '❌ 错误'}<br>
-                        正确答案：${String.fromCharCode(65 + q.answer)}<br>
-                        💡 解析：${q.analysis}
-                    </div>
-                `;
+                <div class="analysis-item">
+                    <strong>${i + 1}. ${q.q}</strong><br>
+                    你的答案：${String.fromCharCode(65 + userAnswers[i])} 
+                    ${correct ? '✅ 正确！' : '❌ 错误'}<br>
+                    正确答案：${String.fromCharCode(65 + q.answer)}<br>
+                    💡 解析：${q.analysis}
+                </div>
+            `;
             });
             score = Math.round(score);
 
             // 更新用户数据
-            currentUser.quizCount++;
+            currentUser.quizCount += currentQuiz.length;
             if (score > currentUser.highScore) {
                 currentUser.highScore = score;
             }
             const userIndex = users.findIndex(u => u.name === currentUser.name);
-            users[userIndex] = currentUser;
-            localStorage.setItem('mathUsersV3', JSON.stringify(users));
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('mathUsersV5', JSON.stringify(users));
+            }
+
+            // 添加成长日记
+            addDiaryEntry(`✏️ 完成了${isRedoMode ? '错题重做' : currentQuiz.length + '道题'}，获得${score}分`);
+
+            // 成就检测
+            unlockAchievement('first_quiz');
+            if (currentUser.quizCount >= 100) unlockAchievement('quiz_100');
+            if (score === 100) unlockAchievement('full_score');
 
             document.getElementById('quizContent').innerHTML = `
-                <div class="result-box">
-                    <h2 style="color:var(--深绿);">练习完成！</h2>
-                    <div class="score">${score} 分</div>
-                    <p style="font-size:16px;color:var(--文字灰);">${score >= 80 ? '太棒了！你是数学小天才！🌟' : score >= 60 ? '不错哦！继续加油！💪' : '没关系，再去看看知识点吧~ 📚'}</p>
-                    <div class="analysis">
-                        <h3 style="color:var(--深绿);margin-bottom:15px;">📝 答案解析</h3>
-                        ${analysisHtml}
-                    </div>
-                    <div style="margin-top:20px;">
-                        <button class="submit-btn" onclick="showPage('quiz')">再练一套 🔄</button>
-                    </div>
+            <div class="result-box">
+                <h2 style="color:var(--深绿);">练习完成！</h2>
+                <div class="score">${score} 分</div>
+                <p style="font-size:16px;color:var(--文字灰);">${score >= 90 ? '太棒了！你是数学小天才！🌟' : score >= 70 ? '不错哦！继续加油！💪' : score >= 60 ? '还可以，再巩固一下吧~ 📚' : '没关系，再去看看知识点，下次一定能行！'}</p>
+                <div class="analysis">
+                    <h3 style="color:var(--深绿);margin-bottom:15px;">📝 答案解析</h3>
+                    ${analysisHtml}
                 </div>
-            `;
+                <div style="margin-top:20px;display:flex;gap:15px;justify-content:center;flex-wrap:wrap;">
+                    <button class="submit-btn" onclick="showPage('quiz')">再练一套 🔄</button>
+                    <button class="submit-btn" style="background:linear-gradient(45deg, #9370DB, #8A2BE2);" onclick="showPage('wrongBook')">查看错题本 📝</button>
+                </div>
+            </div>
+        `;
         }
 
-        // 错题本
+        // 错题本（增强版）
         function loadWrongBook() {
             const container = document.getElementById('wrongBookContent');
+            const redoBtn = document.getElementById('redoBtn');
+
             if (!currentUser.wrongQuestions || currentUser.wrongQuestions.length === 0) {
                 container.innerHTML = '<div class="empty-box">🎉 太棒了！你还没有错题，继续保持！</div>';
+                redoBtn.style.display = 'none';
                 return;
             }
+
+            redoBtn.style.display = 'inline-block';
             let html = '';
             currentUser.wrongQuestions.forEach((q, i) => {
                 html += `
-                    <div class="question-card">
-                        <div class="question-title">${i + 1}. ${q.q}</div>
-                        <div class="options">
-                            ${q.options.map((opt, j) => `
-                                <div class="option ${j === q.answer ? 'correct' : ''}">
-                                    ${String.fromCharCode(65 + j)}. ${opt}
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="tip-box" style="margin-top:15px;">💡 解析：${q.analysis}</div>
-                        <div style="text-align:center; margin-top:15px;">
-                            <button class="submit-btn" style="background:linear-gradient(45deg, #9370DB, #8A2BE2);" onclick="removeWrong(${i})">已掌握，移除 🗑️</button>
-                        </div>
+                <div class="question-card">
+                    <div class="question-title">${i + 1}. ${q.q}</div>
+                    <div class="options">
+                        ${q.options.map((opt, j) => `
+                            <div class="option ${j === q.answer ? 'correct' : ''}">
+                                ${String.fromCharCode(65 + j)}. ${opt}
+                            </div>
+                        `).join('')}
                     </div>
-                `;
+                    <div class="tip-box" style="margin-top:15px;">💡 解析：${q.analysis}</div>
+                    <div style="text-align:center; margin-top:15px;">
+                        <button class="submit-btn" style="background:linear-gradient(45deg, #9370DB, #8A2BE2);" onclick="removeWrong(${i})">已掌握，移除 🗑️</button>
+                    </div>
+                </div>
+            `;
             });
             container.innerHTML = html;
         }
 
         function removeWrong(index) {
             currentUser.wrongQuestions.splice(index, 1);
+            if (!currentUser.totalWrongRemoved) currentUser.totalWrongRemoved = 0;
+            currentUser.totalWrongRemoved++;
+
             const userIndex = users.findIndex(u => u.name === currentUser.name);
-            users[userIndex] = currentUser;
-            localStorage.setItem('mathUsersV3', JSON.stringify(users));
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('mathUsersV5', JSON.stringify(users));
+            }
             loadWrongBook();
+            addDiaryEntry("✅ 掌握了一道错题，太棒了！");
+
+            // 成就检测
+            if (currentUser.totalWrongRemoved >= 10) unlockAchievement('wrong_clear');
         }
 
-        // 个人中心
+        // 新增：重做所有错题
+        function redoWrong() {
+            if (!currentUser.wrongQuestions || currentUser.wrongQuestions.length === 0) {
+                alert('你还没有错题哦~');
+                return;
+            }
+            currentQuiz = currentUser.wrongQuestions;
+            userAnswers = new Array(currentQuiz.length).fill(null);
+            isRedoMode = true;
+            showPage('quiz');
+            renderQuiz();
+        }
+
+        // 成长日记模块
+        function loadDiary() {
+            const container = document.getElementById('diaryList');
+            if (!currentUser.diaries || currentUser.diaries.length === 0) {
+                container.innerHTML = '<div class="diary-item"><div class="diary-content">还没有写过日记，写下你的第一条成长感悟吧~</div></div>';
+                return;
+            }
+            let html = '';
+            // 倒序显示，最新的在最上面
+            currentUser.diaries.slice().reverse().forEach(diary => {
+                html += `
+                <div class="diary-item">
+                    <div class="diary-date">${diary.date}</div>
+                    <div class="diary-content">${diary.content}</div>
+                </div>
+            `;
+            });
+            container.innerHTML = html;
+        }
+
+        function addDiary() {
+            const content = document.getElementById('diaryInput').value.trim();
+            if (!content) {
+                alert('请输入日记内容哦~');
+                return;
+            }
+            const now = new Date();
+            const date = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            currentUser.diaries.push({ date, content });
+            const userIndex = users.findIndex(u => u.name === currentUser.name);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('mathUsersV5', JSON.stringify(users));
+            }
+            document.getElementById('diaryInput').value = '';
+            loadDiary();
+            alert('日记保存成功！💾');
+        }
+
+        // 内部函数：自动添加学习足迹
+        function addDiaryEntry(content) {
+            if (!currentUser) return;
+            const now = new Date();
+            const date = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            currentUser.diaries.push({ date, content });
+            const userIndex = users.findIndex(u => u.name === currentUser.name);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('mathUsersV5', JSON.stringify(users));
+            }
+        }
+
+        // 个人中心（增强版）
         function loadProfile() {
             document.getElementById('profileName').textContent = `👧 ${currentUser.name}`;
             document.getElementById('highScore').textContent = currentUser.highScore;
             document.getElementById('quizCount').textContent = currentUser.quizCount;
             document.getElementById('wrongCount').textContent = currentUser.wrongQuestions ? currentUser.wrongQuestions.length : 0;
 
+            // 计算正确率
+            let accuracy = 0;
+            if (currentUser.quizCount > 0) {
+                const totalCorrect = currentUser.quizCount - currentUser.wrongQuestions.length;
+                accuracy = Math.round((totalCorrect / currentUser.quizCount) * 100);
+            }
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+
+            // 排行榜
             const sortedUsers = [...users].sort((a, b) => b.highScore - a.highScore);
             let html = '';
             sortedUsers.forEach((user, i) => {
                 const isCurrent = currentUser && user.name === currentUser.name;
                 html += `
-                    <div class="rank-item ${isCurrent ? 'current-user' : ''}">
-                        <div class="rank-number ${i < 3 ? 'rank-' + (i + 1) : 'rank-other'}">
-                            ${i + 1}
-                        </div>
-                        <div class="rank-info">
-                            <div class="rank-name">${user.name} ${isCurrent ? '(你)' : ''}</div>
-                            <div class="rank-score">最高分：${user.highScore} 分 | 答题次数：${user.quizCount}</div>
-                        </div>
+                <div class="rank-item ${isCurrent ? 'current-user' : ''}">
+                    <div class="rank-number ${i < 3 ? 'rank-' + (i + 1) : 'rank-other'}">
+                        ${i + 1}
                     </div>
-                `;
+                    <div class="rank-info">
+                        <div class="rank-name">${user.name} ${isCurrent ? '(你)' : ''}</div>
+                        <div class="rank-score">最高分：${user.highScore} 分 | 答题次数：${user.quizCount}</div>
+                    </div>
+                </div>
+            `;
             });
             document.getElementById('rankList').innerHTML = html || '<p style="text-align:center;color:var(--文字灰);">还没有人答题，快来当第一个！</p>';
         }
@@ -1347,6 +1980,7 @@
         // 初始化
         initQuote();
     </script>
+
 </body>
 
 </html>
