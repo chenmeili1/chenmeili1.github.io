@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一次函数里的初心与成长</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --奶黄: #FFF8DC;
+            --浅粉: #FFB6C1;
+            --薄荷绿: #98FB98;
+            --天蓝: #87CEEB;
+            --暖橙: #FFA500;
+            --深粉: #FF69B4;
+            --深绿: #3CB371;
+            --浅灰: #F5F5F5;
+            --文字灰: #666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', 'Comic Neue', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--奶黄) 0%, #FFEFD5 50%, var(--浅粉) 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(255, 105, 180, 0.18);
+        }
+
+        /* 图片样式 - 居中+响应式 */
+        .knowledge-card img {
+            display: block;
+            margin: 18px auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 18px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 页面切换 */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 导航栏 - 响应式 */
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 22px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .nav-btn.知识点 {
+            background: var(--天蓝);
+        }
+
+        .nav-btn.练习场 {
+            background: var(--暖橙);
+        }
+
+        .nav-btn.错题本 {
+            background: linear-gradient(45deg, #9370DB, #8A2BE2);
+        }
+
+        .nav-btn.个人中心 {
+            background: var(--深粉);
+        }
+
+        .nav-btn.退出 {
+            background: #ccc;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 登录注册 - 响应式 */
+        .auth-box {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .auth-title {
+            font-size: clamp(24px, 5vw, 36px);
+            color: var(--深粉);
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 0 var(--浅粉);
+        }
+
+        .daily-quote {
+            background: linear-gradient(135deg, var(--薄荷绿), var(--天蓝));
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            font-size: clamp(15px, 3vw, 18px);
+            line-height: 1.8;
+            box-shadow: 0 5px 15px rgba(60, 179, 113, 0.2);
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--深绿);
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 17px;
+        }
+
+        .input-group input {
+            width: 100%;
+            max-width: 420px;
+            padding: 14px 18px;
+            border: 3px solid var(--浅粉);
+            border-radius: 20px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--深粉);
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.25);
+        }
+
+        .auth-btn {
+            background: linear-gradient(45deg, var(--浅粉), var(--深粉));
+            color: white;
+            border: none;
+            padding: 14px 45px;
+            border-radius: 30px;
+            font-size: 19px;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+
+        .auth-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 10px 28px rgba(255, 105, 180, 0.35);
+        }
+
+        .switch-auth {
+            color: var(--深绿);
+            cursor: pointer;
+            margin-top: 18px;
+            font-size: 15px;
+        }
+
+        .switch-auth:hover {
+            text-decoration: underline;
+        }
+
+        /* 知识点页 - 响应式 */
+        .knowledge-title {
+            font-size: clamp(22px, 4.5vw, 34px);
+            color: var(--深粉);
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 0 var(--浅粉);
+        }
+
+        .knowledge-card {
+            background: linear-gradient(135deg, var(--奶黄), #fff);
+            border-radius: 22px;
+            padding: 25px;
+            margin-bottom: 22px;
+            border-left: 7px solid var(--暖橙);
+            box-shadow: 0 5px 18px rgba(255, 165, 0, 0.12);
+        }
+
+        .knowledge-card h3 {
+            color: var(--深绿);
+            font-size: clamp(18px, 3.5vw, 23px);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .knowledge-card p {
+            color: var(--文字灰);
+            font-size: clamp(14px, 2.8vw, 17px);
+            line-height: 1.9;
+        }
+
+        .highlight {
+            background: linear-gradient(180deg, transparent 60%, var(--浅粉) 60%);
+            padding: 0 5px;
+            font-weight: 700;
+        }
+
+        .formula-box {
+            background: var(--天蓝);
+            color: white;
+            padding: 18px;
+            border-radius: 18px;
+            text-align: center;
+            font-size: clamp(20px, 4vw, 27px);
+            font-weight: 700;
+            margin: 18px 0;
+            box-shadow: 0 5px 15px rgba(135, 206, 235, 0.35);
+        }
+
+        .tip-box {
+            background: var(--薄荷绿);
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 12px;
+            color: var(--深绿);
+            font-weight: 500;
+        }
+
+        /* 互动演示区 */
+        .demo-box {
+            background: linear-gradient(135deg, #E6E6FA, #FFF0F5);
+            border-radius: 22px;
+            padding: 25px;
+            margin-bottom: 22px;
+            border-left: 7px solid #9370DB;
+            box-shadow: 0 5px 18px rgba(147, 112, 219, 0.15);
+        }
+
+        .slider-group {
+            margin: 20px 0;
+        }
+
+        .slider-group label {
+            display: block;
+            color: var(--深绿);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 17px;
+        }
+
+        .slider-group input[type="range"] {
+            width: 100%;
+            max-width: 500px;
+            height: 12px;
+            border-radius: 6px;
+            background: var(--浅粉);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--深粉);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 105, 180, 0.4);
+        }
+
+        .canvas-container {
+            background: white;
+            border-radius: 18px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+            text-align: center;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+        /* 练习场 - 响应式 */
+        .difficulty-select {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .diff-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 22px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .diff-btn.简单 {
+            background: var(--薄荷绿);
+        }
+
+        .diff-btn.中等 {
+            background: var(--暖橙);
+        }
+
+        .diff-btn.困难 {
+            background: var(--深粉);
+        }
+
+        .diff-btn:hover {
+            transform: scale(1.12);
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 22px;
+            padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        .question-title {
+            font-size: clamp(15px, 3vw, 19px);
+            color: var(--深绿);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px 18px;
+            border: 3px solid var(--浅粉);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: clamp(14px, 2.8vw, 16px);
+        }
+
+        .option:hover {
+            background: var(--奶黄);
+            border-color: var(--深粉);
+        }
+
+        .option.selected {
+            background: var(--浅粉);
+            border-color: var(--深粉);
+            color: white;
+            font-weight: 700;
+        }
+
+        .option.correct {
+            background: var(--薄荷绿);
+            border-color: var(--深绿);
+            color: white;
+        }
+
+        .option.wrong {
+            background: #FFB6C1;
+            border-color: #FF69B4;
+            color: white;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, var(--薄荷绿), var(--深绿));
+            color: white;
+            border: none;
+            padding: 14px 45px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 18px;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 28px rgba(60, 179, 113, 0.35);
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, var(--奶黄), var(--浅粉));
+            border-radius: 25px;
+            padding: 28px;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .score {
+            font-size: clamp(36px, 8vw, 48px);
+            color: var(--深粉);
+            font-weight: 700;
+            margin: 18px 0;
+        }
+
+        .analysis {
+            text-align: left;
+            margin-top: 18px;
+        }
+
+        .analysis-item {
+            background: white;
+            padding: 14px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+
+        /* 错题本 */
+        .empty-box {
+            text-align: center;
+            padding: 40px;
+            color: var(--文字灰);
+            font-size: 17px;
+        }
+
+        /* 个人中心 - 响应式 */
+        .profile-title {
+            font-size: clamp(22px, 4.5vw, 32px);
+            color: var(--深粉);
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 0 var(--浅粉);
+        }
+
+        .user-info-card {
+            background: linear-gradient(135deg, var(--奶黄), white);
+            border-radius: 22px;
+            padding: 25px;
+            margin-bottom: 22px;
+            text-align: center;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        .user-name {
+            font-size: clamp(20px, 4vw, 26px);
+            color: var(--深绿);
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .user-stats {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: var(--天蓝);
+            color: white;
+            padding: 15px 22px;
+            border-radius: 18px;
+            min-width: 120px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .rank-title {
+            font-size: clamp(20px, 4vw, 28px);
+            color: var(--深粉);
+            text-align: center;
+            margin-bottom: 22px;
+            text-shadow: 2px 2px 0 var(--浅粉);
+        }
+
+        .rank-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .rank-item {
+            background: linear-gradient(135deg, var(--奶黄), white);
+            padding: 18px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .rank-number {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .rank-1 {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+        }
+
+        .rank-2 {
+            background: linear-gradient(45deg, #C0C0C0, #A9A9A9);
+        }
+
+        .rank-3 {
+            background: linear-gradient(45deg, #CD7F32, #8B4513);
+        }
+
+        .rank-other {
+            background: var(--天蓝);
+        }
+
+        .rank-info {
+            flex: 1;
+        }
+
+        .rank-name {
+            font-size: clamp(16px, 3.2vw, 19px);
+            font-weight: 700;
+            color: var(--深绿);
+        }
+
+        .rank-score {
+            color: var(--文字灰);
+            margin-top: 4px;
+            font-size: 14px;
+        }
+
+        .current-user {
+            border: 3px solid var(--深粉);
+            transform: scale(1.01);
+        }
+
+        /* 欢迎提示 */
+        .welcome {
+            text-align: center;
+            color: var(--深绿);
+            font-size: clamp(16px, 3.2vw, 19px);
+            margin-bottom: 18px;
+        }
+
+        /* 响应式媒体查询 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                border-radius: 22px;
+            }
+
+            .nav-btn {
+                padding: 9px 18px;
+                font-size: 14px;
+            }
+
+            .knowledge-card,
+            .question-card,
+            .user-info-card,
+            .demo-box {
+                padding: 18px;
+            }
+
+            .user-stats {
+                gap: 15px;
+            }
+
+            .stat-item {
+                min-width: 100px;
+                padding: 12px 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .nav {
+                gap: 8px;
+            }
+
+            .nav-btn {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+
+            .auth-btn,
+            .submit-btn {
+                padding: 12px 35px;
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 登录/注册页 -->
+        <div id="authPage" class="page active">
+            <div class="auth-box">
+                <h1 class="auth-title">🌟 一次函数里的初心与成长 🌟</h1>
+                <div class="daily-quote" id="dailyQuote"></div>
+                <div id="loginBox">
+                    <div class="input-group">
+                        <label>👧 你的名字</label>
+                        <input type="text" id="loginName" placeholder="请输入用户名">
+                    </div>
+                    <div class="input-group">
+                        <label>🔐 密码</label>
+                        <input type="password" id="loginPwd" placeholder="请输入密码">
+                    </div>
+                    <button class="auth-btn" onclick="login()">登录</button>
+                    <p class="switch-auth" onclick="showRegister()">还没有账号？去注册 →</p>
+                </div>
+                <div id="registerBox" style="display:none;">
+                    <div class="input-group">
+                        <label>👧 取个名字</label>
+                        <input type="text" id="regName" placeholder="请输入用户名">
+                    </div>
+                    <div class="input-group">
+                        <label>🔐 设置密码</label>
+                        <input type="password" id="regPwd" placeholder="请输入密码">
+                    </div>
+                    <button class="auth-btn" onclick="register()">注册</button>
+                    <p class="switch-auth" onclick="showLogin()">已有账号？去登录 →</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主内容页 -->
+        <div id="mainPage" class="page">
+            <div class="welcome" id="welcomeMsg"></div>
+            <div class="nav">
+                <button class="nav-btn 知识点" onclick="showPage('knowledge')">📚 知识点</button>
+                <button class="nav-btn 练习场" onclick="showPage('quiz')">✏️ 练习场</button>
+                <button class="nav-btn 错题本" onclick="showPage('wrongBook')">📝 错题本</button>
+                <button class="nav-btn 个人中心" onclick="showPage('profile')">👤 个人中心</button>
+                <button class="nav-btn 退出" onclick="logout()">🚪 退出</button>
+            </div>
+
+            <!-- 知识点 -->
+            <div id="knowledge" class="page active">
+                <h2 class="knowledge-title">📐 一次函数：初心与成长的故事</h2>
+
+                <div class="knowledge-card">
+                    <h3>🎯 核心公式先记牢</h3>
+                    <div class="formula-box">y = kx + b</div>
+                    <img src="image/1.png" alt="一次函数图像示例">
+                    <p>这就是我们的一次函数核心公式，简单却藏着人生的大道理！其中 x 是自变量，y 是因变量，随着 x 的变化，y 也会跟着变化。</p>
+                    <div class="tip-box">💡 就像我们的人生，随着时间（x）的推移，我们的成长（y）由态度（k）和起点（b）共同决定！</div>
+                </div>
+
+                <!-- 新增：互动演示区 -->
+                <div class="demo-box">
+                    <h3>🎮 动手玩一玩：拖动滑块看变化</h3>
+                    <p style="color: var(--文字灰); margin-bottom: 15px;">调节 k（态度/速度）和 b（初心/起点），观察直线如何变化！</p>
+                    <div class="slider-group">
+                        <label>🎚️ 斜率 k（当前值：<span id="kValue">1</span>）</label>
+                        <input type="range" id="kSlider" min="-5" max="5" step="0.5" value="1" oninput="updateGraph()">
+                    </div>
+                    <div class="slider-group">
+                        <label>📍 截距 b（当前值：<span id="bValue">0</span>）</label>
+                        <input type="range" id="bSlider" min="-5" max="5" step="0.5" value="0" oninput="updateGraph()">
+                    </div>
+                    <div class="formula-box" id="currentFormula">y = 1x + 0</div>
+                    <div class="canvas-container">
+                        <canvas id="graphCanvas" width="500" height="400"></canvas>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <h3>🌱 b 是我们的「初心与起点」</h3>
+                    <p>当 x=0 时，y=b。<span class="highlight">b 决定了直线与 y 轴的交点</span>，这个交点就是我们的起点，就像我们每个人出生时的环境，或者做一件事时的初心。
+                    </p>
+                    <p>
+                        💡 b>0，起点在原点上方，代表我们有良好的基础或积极的初心；<br />
+                        &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;b=0，从原点出发，一切从零开始！（叫正比例函数，是一次函数的特殊形式）<br />
+                        &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;b<0，起点在原点下方，代表起点较低但同样可以向上。 </p>
+                            <div class="tip-box">🌟 无论 b 是多少，只要我们保持初心，就能找到正确的方向！
+                            </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <h3>🚀 k 是我们的「速度与态度」</h3>
+                    <p><span class="highlight">k 决定了直线的斜率（倾斜程度）</span>，斜率越大，直线越陡，代表我们成长的速度越快；斜率越小，直线越平缓，代表成长的速度越慢。</p>
+                    <p>💪 k>0，直线从左下往右上上升，代表积极向上，只要坚持，人生就会越来越好！</p>
+                    <p>😔 k<0，直线从左上往右下下降，代表消极懈怠，需要及时调整状态，改变态度！< /p>
+                            <p>😐 k=0，直线水平，代表停滞不前，没有成长，这时候需要寻找动力！</p>
+                            <div class="tip-box">🎯 态度（k）决定了我们成长的方向和速度，保持积极的 k 值，人生才能不断向上！</div>
+                </div>
+
+                <!-- 新增：生活实例 -->
+                <div class="knowledge-card">
+                    <h3>🏪 生活中的一次函数</h3>
+                    <p><strong>例子1：打车计费</strong></p>
+                    <p>假设打车起步价是 8 元（b=8），每公里收费 2 元（k=2），那么总费用 y 和公里数 x 的关系就是：<span class="highlight">y = 2x + 8</span>。
+                    </p>
+                    <br>
+                    <p><strong>例子2：手机话费</strong></p>
+                    <p>手机套餐月租 15 元（b=15），每分钟通话 0.1 元（k=0.1），那么总话费 y 和通话分钟 x 的关系就是：<span class="highlight">y = 0.1x +
+                            15</span>。</p>
+                    <div class="tip-box">✨ 看！一次函数就在我们身边，学好它能解决很多生活问题呢！</div>
+                </div>
+
+                <div class="knowledge-card">
+                    <h3>🌟 人生如函数，不忘初心，砥砺前行</h3>
+                    <p>k 是前进的速度与态度，b 是出发的初心与起点。方向对、步履不停、不忘初心，我们的人生直线就能不断向上！</p>
+                    <p>也许我们的起点（b）不同，但只要我们保持积极的态度（k>0），每天进步一点点，就一定能到达理想的高度！</p>
+                    <div class="tip-box">✨ 愿我们都能找到自己的 k 和 b，画出属于自己的向上人生直线！</div>
+                </div>
+            </div>
+
+            <!-- 练习场 -->
+            <div id="quiz" class="page">
+                <div class="difficulty-select">
+                    <button class="diff-btn 简单" onclick="startQuiz('简单')">🌱 简单（4道）</button>
+                    <button class="diff-btn 中等" onclick="startQuiz('中等')">🌿 中等（10道）</button>
+                    <button class="diff-btn 困难" onclick="startQuiz('困难')">🌳 困难（20道）</button>
+                </div>
+                <div id="quizContent"></div>
+            </div>
+
+            <!-- 错题本 -->
+            <div id="wrongBook" class="page">
+                <h2 class="knowledge-title">📝 我的错题本</h2>
+                <div id="wrongBookContent"></div>
+            </div>
+
+            <!-- 个人中心 -->
+            <div id="profile" class="page">
+                <h2 class="profile-title">👤 个人中心</h2>
+                <div class="user-info-card">
+                    <div class="user-name" id="profileName"></div>
+                    <div class="user-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="highScore">0</div>
+                            <div class="stat-label">最高分</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="quizCount">0</div>
+                            <div class="stat-label">答题次数</div>
+                        </div>
+                        <div class="stat-item" style="background: linear-gradient(45deg, #9370DB, #8A2BE2);">
+                            <div class="stat-value" id="wrongCount">0</div>
+                            <div class="stat-label">错题数</div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="rank-title">🏆 答题排行榜</h3>
+                <div id="rankList" class="rank-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 励志名言库
+        const quotes = [
+            "🌟 千里之行，始于足下。—— 老子",
+            "💪 天行健，君子以自强不息。—— 《周易》",
+            "🎯 不积跬步，无以至千里；不积小流，无以成江海。—— 荀子",
+            "✨ 宝剑锋从磨砺出，梅花香自苦寒来。—— 《警世贤文》",
+            "🚀 长风破浪会有时，直挂云帆济沧海。—— 李白",
+            "💡 态度决定一切，奋斗成就未来。",
+            "🌱 每天进步一点点，就是成功的开始！",
+            "🌈 不忘初心，方得始终。—— 《华严经》"
+        ];
+
+        // 数据存储
+        let users = JSON.parse(localStorage.getItem('mathUsersV3')) || [];
+        let currentUser = null;
+        let currentQuiz = null;
+        let userAnswers = [];
+
+        // 题库：简单4道，中等10道，困难20道
+        const questions = {
+            简单: [
+                {
+                    q: "一次函数 y = 2x + 3 中，b 的值是？",
+                    options: ["2", "3", "x", "y"],
+                    answer: 1,
+                    analysis: "b 是常数项，代表初心与起点，这里 b=3。"
+                },
+                {
+                    q: "一次函数 y = kx + b 中，哪个代表斜率（速度与态度）？",
+                    options: ["k", "b", "x", "y"],
+                    answer: 0,
+                    analysis: "k 是斜率，决定直线的倾斜程度，代表我们的速度与态度。"
+                },
+                {
+                    q: "当 k>0 时，直线会？",
+                    options: ["上升", "下降", "水平", "垂直"],
+                    answer: 0,
+                    analysis: "k>0，直线从左下往右上上升，代表积极向上！"
+                },
+                {
+                    q: "一次函数 y = 5x - 1 中，b 的值是？",
+                    options: ["5", "-1", "1", "x"],
+                    answer: 1,
+                    analysis: "b 是常数项，注意符号，这里 b=-1，代表起点在原点下方。"
+                }
+            ],
+            中等: [
+                {
+                    q: "一次函数 y = -3x + 5 中，k 的值和直线方向是？",
+                    options: ["k=3，上升", "k=-3，上升", "k=3，下降", "k=-3，下降"],
+                    answer: 3,
+                    analysis: "k=-3<0，直线从左上往右下下降，需要调整状态哦。"
+                },
+                {
+                    q: "当 b=0 时，直线会经过哪里？",
+                    options: ["原点(0,0)", "(0,1)", "(1,0)", "不经过任何特殊点"],
+                    answer: 0,
+                    analysis: "b=0 时，x=0 则 y=0，直线从原点出发！"
+                },
+                {
+                    q: "一次函数 y = x - 2 与 y 轴的交点是？",
+                    options: ["(0, 2)", "(0, -2)", "(2, 0)", "(-2, 0)"],
+                    answer: 1,
+                    analysis: "与 y 轴交点时 x=0，代入得 y=-2，所以是(0, -2)。"
+                },
+                {
+                    q: "一次函数 y = 4x + 1 中，k 的值是？",
+                    options: ["1", "4", "x", "y"],
+                    answer: 1,
+                    analysis: "k 是 x 的系数，代表速度与态度，这里 k=4，成长速度很快哦！"
+                },
+                {
+                    q: "当 k=0 时，直线会？",
+                    options: ["上升", "下降", "水平", "垂直"],
+                    answer: 2,
+                    analysis: "k=0 时，y=b，直线水平，代表停滞不前，没有成长。"
+                },
+                {
+                    q: "一次函数 y = -2x - 3 中，b 的值是？",
+                    options: ["-2", "2", "-3", "3"],
+                    answer: 2,
+                    analysis: "b 是常数项，注意符号，这里 b=-3。"
+                },
+                {
+                    q: "若直线 y = kx + b 从原点出发且上升，则？",
+                    options: ["k>0, b=0", "k>0, b>0", "k<0, b=0", "k<0, b>0"],
+                    answer: 0,
+                    analysis: "从原点出发说明 b=0，上升说明 k>0，不忘初心，积极向上！"
+                },
+                {
+                    q: "一次函数 y = 3x 中，b 的值是？",
+                    options: ["3", "0", "1", "x"],
+                    answer: 1,
+                    analysis: "y=3x 可以写成 y=3x+0，所以 b=0，从原点出发！"
+                },
+                {
+                    q: "当 k<0 时，直线会？",
+                    options: ["上升", "下降", "水平", "垂直"],
+                    answer: 1,
+                    analysis: "k<0，直线从左上往右下下降，代表消极懈怠，需要调整！"
+                },
+                {
+                    q: "一次函数 y = -x + 4 中，k 的值是？",
+                    options: ["1", "-1", "4", "-4"],
+                    answer: 1,
+                    analysis: "k 是 x 的系数，注意符号，这里 k=-1。"
+                }
+            ],
+            困难: [
+                {
+                    q: "已知一次函数过点(0, 4)和(1, 6)，则 k 和 b 分别是？",
+                    options: ["k=2, b=4", "k=4, b=2", "k=2, b=6", "k=6, b=4"],
+                    answer: 0,
+                    analysis: "过(0,4)说明 b=4；代入(1,6)得 6=k*1+4，所以 k=2。"
+                },
+                {
+                    q: "若直线 y = kx + b 从第二象限穿过原点到第一象限，则？",
+                    options: ["k>0, b>0", "k>0, b=0", "k<0, b>0", "k<0, b=0"],
+                    answer: 1,
+                    analysis: "过原点说明 b=0；从第二到第一象限，直线上升，k>0。"
+                },
+                {
+                    q: "要让直线 y = 2x + b 向上平移 3 个单位，应该？",
+                    options: ["k 加 3", "b 加 3", "k 减 3", "b 减 3"],
+                    answer: 1,
+                    analysis: "上下平移改变 b 值，向上平移 b 增加，不忘初心，继续向上！"
+                },
+                {
+                    q: "一次函数 y = kx + b 过点(0, -2)且 k=3，则函数表达式为？",
+                    options: ["y=3x+2", "y=3x-2", "y=-2x+3", "y=-2x-3"],
+                    answer: 1,
+                    analysis: "过(0,-2)说明 b=-2，k=3，所以表达式为 y=3x-2。"
+                },
+                {
+                    q: "若直线 y = kx + b 与 y 轴交于(0, 5)且下降，则？",
+                    options: ["k>0, b=5", "k>0, b=-5", "k<0, b=5", "k<0, b=-5"],
+                    answer: 2,
+                    analysis: "与 y 轴交于(0,5)说明 b=5，下降说明 k<0。"
+                },
+                {
+                    q: "已知一次函数过点(1, 3)和(2, 5)，则 k 的值是？",
+                    options: ["1", "2", "3", "5"],
+                    answer: 1,
+                    analysis: "k=(y2-y1)/(x2-x1)=(5-3)/(2-1)=2，斜率为2。"
+                },
+                {
+                    q: "要让直线 y = -x + 4 向下平移 2 个单位，新的表达式为？",
+                    options: ["y=-x+2", "y=-x+6", "y=-2x+4", "y=2x+4"],
+                    answer: 0,
+                    analysis: "向下平移 b 减 2，4-2=2，所以新表达式为 y=-x+2。"
+                },
+                {
+                    q: "一次函数 y = 2x - 1 与 x 轴的交点是？",
+                    options: ["(0, -1)", "(0.5, 0)", "(-0.5, 0)", "(1, 0)"],
+                    answer: 1,
+                    analysis: "与 x 轴交点时 y=0，代入得 0=2x-1，x=0.5，所以是(0.5, 0)。"
+                },
+                {
+                    q: "若直线 y = kx + b 从第一象限穿过(0, 2)到第二象限，则？",
+                    options: ["k>0, b=2", "k>0, b=-2", "k<0, b=2", "k<0, b=-2"],
+                    answer: 2,
+                    analysis: "过(0,2)说明 b=2，从第一到第二象限，直线下降，k<0。"
+                },
+                {
+                    q: "已知一次函数过点(0, 0)和(3, 6)，则函数表达式为？",
+                    options: ["y=3x", "y=2x", "y=6x", "y=x+3"],
+                    answer: 1,
+                    analysis: "过(0,0)说明 b=0，k=(6-0)/(3-0)=2，所以表达式为 y=2x。"
+                },
+                {
+                    q: "若直线 y = kx + b 与 y 轴交于(0, -3)且上升，则？",
+                    options: ["k>0, b=-3", "k>0, b=3", "k<0, b=-3", "k<0, b=3"],
+                    answer: 0,
+                    analysis: "与 y 轴交于(0,-3)说明 b=-3，上升说明 k>0，起点低但态度积极！"
+                },
+                {
+                    q: "已知一次函数过点(2, 5)且 k=1，则 b 的值是？",
+                    options: ["1", "2", "3", "5"],
+                    answer: 2,
+                    analysis: "代入(2,5)得 5=1*2+b，所以 b=3。"
+                },
+                {
+                    q: "要让直线 y = 5x 向上平移 2 个单位，新的表达式为？",
+                    options: ["y=5x+2", "y=5x-2", "y=7x", "y=3x"],
+                    answer: 0,
+                    analysis: "向上平移 b 加 2，原 b=0，新 b=2，所以表达式为 y=5x+2。"
+                },
+                {
+                    q: "一次函数 y = -3x + 6 与 x 轴的交点是？",
+                    options: ["(0, 6)", "(2, 0)", "(-2, 0)", "(6, 0)"],
+                    answer: 1,
+                    analysis: "与 x 轴交点时 y=0，代入得 0=-3x+6，x=2，所以是(2, 0)。"
+                },
+                {
+                    q: "若直线 y = kx + b 从第三象限穿过原点到第四象限，则？",
+                    options: ["k>0, b=0", "k>0, b>0", "k<0, b=0", "k<0, b>0"],
+                    answer: 2,
+                    analysis: "过原点说明 b=0，从第三到第四象限，直线下降，k<0。"
+                },
+                {
+                    q: "已知一次函数过点(1, 4)和(3, 8)，则函数表达式为？",
+                    options: ["y=2x+2", "y=4x", "y=2x+4", "y=4x+2"],
+                    answer: 0,
+                    analysis: "k=(8-4)/(3-1)=2，代入(1,4)得 4=2*1+b，b=2，所以表达式为 y=2x+2。"
+                },
+                {
+                    q: "要让直线 y = x - 5 向上平移 5 个单位，新的表达式为？",
+                    options: ["y=x", "y=x+5", "y=x-10", "y=5x-5"],
+                    answer: 0,
+                    analysis: "向上平移 b 加 5，-5+5=0，新 b=0，所以表达式为 y=x。"
+                },
+                {
+                    q: "一次函数 y = kx + b 过点(0, 1)且与直线 y=2x 平行，则？",
+                    options: ["k=2, b=1", "k=1, b=2", "k=-2, b=1", "k=2, b=0"],
+                    answer: 0,
+                    analysis: "平行说明 k 相同，k=2；过(0,1)说明 b=1，所以表达式为 y=2x+1。"
+                },
+                {
+                    q: "已知一次函数过点(0, -4)且与直线 y=-x+3 平行，则函数表达式为？",
+                    options: ["y=-x-4", "y=-x+4", "y=x-4", "y=x+4"],
+                    answer: 0,
+                    analysis: "平行说明 k=-1，过(0,-4)说明 b=-4，所以表达式为 y=-x-4。"
+                },
+                {
+                    q: "若直线 y = 3x + b 过点(1, 5)，则 b 的值是？",
+                    options: ["1", "2", "3", "5"],
+                    answer: 1,
+                    analysis: "代入(1,5)得 5=3*1+b，所以 b=2。"
+                }
+            ]
+        };
+
+        // 初始化每日励志
+        function initQuote() {
+            const today = new Date().getDate();
+            const quote = quotes[today % quotes.length];
+            document.getElementById('dailyQuote').innerHTML = `💪 今日励志：<br>${quote}`;
+        }
+
+        // 登录注册逻辑
+        function showRegister() {
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('registerBox').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('registerBox').style.display = 'none';
+            document.getElementById('loginBox').style.display = 'block';
+        }
+
+        function register() {
+            const name = document.getElementById('regName').value.trim();
+            const pwd = document.getElementById('regPwd').value;
+            if (!name || !pwd) {
+                alert('请填写完整信息！');
+                return;
+            }
+            if (users.find(u => u.name === name)) {
+                alert('该名字已被注册！');
+                return;
+            }
+            users.push({ name, pwd, highScore: 0, quizCount: 0, wrongQuestions: [] });
+            localStorage.setItem('mathUsersV3', JSON.stringify(users));
+            alert('注册成功！快去登录吧~');
+            showLogin();
+        }
+
+        function login() {
+            const name = document.getElementById('loginName').value.trim();
+            const pwd = document.getElementById('loginPwd').value;
+            const user = users.find(u => u.name === name && u.pwd === pwd);
+            if (!user) {
+                alert('用户名或密码错误！');
+                return;
+            }
+            currentUser = user;
+            if (!currentUser.wrongQuestions) currentUser.wrongQuestions = [];
+            document.getElementById('welcomeMsg').textContent = `👋 欢迎回来，${currentUser.name}！今天也要加油哦~`;
+            document.getElementById('authPage').classList.remove('active');
+            document.getElementById('mainPage').classList.add('active');
+            showPage('knowledge');
+            initGraph();
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('mainPage').classList.remove('active');
+            document.getElementById('authPage').classList.add('active');
+            document.getElementById('loginName').value = '';
+            document.getElementById('loginPwd').value = '';
+        }
+
+        // 页面切换
+        function showPage(page) {
+            document.querySelectorAll('#mainPage .page').forEach(p => p.classList.remove('active'));
+            document.getElementById(page).classList.add('active');
+            if (page === 'profile') loadProfile();
+            if (page === 'quiz') document.getElementById('quizContent').innerHTML = '<p style="text-align:center;color:var(--文字灰);font-size:16px;">👆 选择难度开始练习吧！</p>';
+            if (page === 'wrongBook') loadWrongBook();
+            if (page === 'knowledge') initGraph();
+        }
+
+        // 互动图像绘制
+        let canvas, ctx;
+        function initGraph() {
+            canvas = document.getElementById('graphCanvas');
+            if (!canvas) return;
+            ctx = canvas.getContext('2d');
+            updateGraph();
+        }
+
+        function updateGraph() {
+            if (!ctx) return;
+            const k = parseFloat(document.getElementById('kSlider').value);
+            const b = parseFloat(document.getElementById('bSlider').value);
+            document.getElementById('kValue').textContent = k;
+            document.getElementById('bValue').textContent = b;
+            document.getElementById('currentFormula').textContent = `y = ${k}x + ${b}`;
+
+            // 清空画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const width = canvas.width;
+            const height = canvas.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const scale = 40; // 1单位=40像素
+
+            // 绘制网格
+            ctx.strokeStyle = '#E0E0E0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < width; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+                ctx.stroke();
+            }
+            for (let i = 0; i < height; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+                ctx.stroke();
+            }
+
+            // 绘制坐标轴
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(width, centerY);
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, height);
+            ctx.stroke();
+
+            // 绘制箭头
+            ctx.fillStyle = '#333';
+            ctx.beginPath();
+            ctx.moveTo(width - 10, centerY - 5);
+            ctx.lineTo(width, centerY);
+            ctx.lineTo(width - 10, centerY + 5);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(centerX - 5, 10);
+            ctx.lineTo(centerX, 0);
+            ctx.lineTo(centerX + 5, 10);
+            ctx.fill();
+
+            // 绘制一次函数直线
+            ctx.strokeStyle = '#FF69B4';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            // 计算两点：x=-10 和 x=10
+            const x1 = -10;
+            const y1 = k * x1 + b;
+            const x2 = 10;
+            const y2 = k * x2 + b;
+            ctx.moveTo(centerX + x1 * scale, centerY - y1 * scale);
+            ctx.lineTo(centerX + x2 * scale, centerY - y2 * scale);
+            ctx.stroke();
+
+            // 绘制截距点
+            ctx.fillStyle = '#3CB371';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY - b * scale, 8, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // 练习逻辑
+        function startQuiz(difficulty) {
+            currentQuiz = questions[difficulty];
+            userAnswers = new Array(currentQuiz.length).fill(null);
+            renderQuiz();
+        }
+
+        function renderQuiz() {
+            let html = '';
+            currentQuiz.forEach((q, i) => {
+                html += `
+                    <div class="question-card">
+                        <div class="question-title">${i + 1}. ${q.q}</div>
+                        <div class="options">
+                            ${q.options.map((opt, j) => `
+                                <div class="option ${userAnswers[i] === j ? 'selected' : ''}" 
+                                     onclick="selectAnswer(${i}, ${j})">
+                                    ${String.fromCharCode(65 + j)}. ${opt}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            html += `<div style="text-align:center;"><button class="submit-btn" onclick="submitQuiz()">提交答案 🎉</button></div>`;
+            document.getElementById('quizContent').innerHTML = html;
+        }
+
+        function selectAnswer(qIndex, aIndex) {
+            userAnswers[qIndex] = aIndex;
+            renderQuiz();
+        }
+
+        function submitQuiz() {
+            if (userAnswers.includes(null)) {
+                alert('还有题目没答完哦~');
+                return;
+            }
+            let score = 0;
+            let analysisHtml = '';
+            currentQuiz.forEach((q, i) => {
+                const correct = userAnswers[i] === q.answer;
+                if (correct) score += 100 / currentQuiz.length;
+                else {
+                    // 收录错题
+                    if (!currentUser.wrongQuestions.find(wq => wq.q === q.q)) {
+                        currentUser.wrongQuestions.push(q);
+                    }
+                }
+                analysisHtml += `
+                    <div class="analysis-item">
+                        <strong>${i + 1}. ${q.q}</strong><br>
+                        你的答案：${String.fromCharCode(65 + userAnswers[i])} 
+                        ${correct ? '✅ 正确！' : '❌ 错误'}<br>
+                        正确答案：${String.fromCharCode(65 + q.answer)}<br>
+                        💡 解析：${q.analysis}
+                    </div>
+                `;
+            });
+            score = Math.round(score);
+
+            // 更新用户数据
+            currentUser.quizCount++;
+            if (score > currentUser.highScore) {
+                currentUser.highScore = score;
+            }
+            const userIndex = users.findIndex(u => u.name === currentUser.name);
+            users[userIndex] = currentUser;
+            localStorage.setItem('mathUsersV3', JSON.stringify(users));
+
+            document.getElementById('quizContent').innerHTML = `
+                <div class="result-box">
+                    <h2 style="color:var(--深绿);">练习完成！</h2>
+                    <div class="score">${score} 分</div>
+                    <p style="font-size:16px;color:var(--文字灰);">${score >= 80 ? '太棒了！你是数学小天才！🌟' : score >= 60 ? '不错哦！继续加油！💪' : '没关系，再去看看知识点吧~ 📚'}</p>
+                    <div class="analysis">
+                        <h3 style="color:var(--深绿);margin-bottom:15px;">📝 答案解析</h3>
+                        ${analysisHtml}
+                    </div>
+                    <div style="margin-top:20px;">
+                        <button class="submit-btn" onclick="showPage('quiz')">再练一套 🔄</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 错题本
+        function loadWrongBook() {
+            const container = document.getElementById('wrongBookContent');
+            if (!currentUser.wrongQuestions || currentUser.wrongQuestions.length === 0) {
+                container.innerHTML = '<div class="empty-box">🎉 太棒了！你还没有错题，继续保持！</div>';
+                return;
+            }
+            let html = '';
+            currentUser.wrongQuestions.forEach((q, i) => {
+                html += `
+                    <div class="question-card">
+                        <div class="question-title">${i + 1}. ${q.q}</div>
+                        <div class="options">
+                            ${q.options.map((opt, j) => `
+                                <div class="option ${j === q.answer ? 'correct' : ''}">
+                                    ${String.fromCharCode(65 + j)}. ${opt}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="tip-box" style="margin-top:15px;">💡 解析：${q.analysis}</div>
+                        <div style="text-align:center; margin-top:15px;">
+                            <button class="submit-btn" style="background:linear-gradient(45deg, #9370DB, #8A2BE2);" onclick="removeWrong(${i})">已掌握，移除 🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function removeWrong(index) {
+            currentUser.wrongQuestions.splice(index, 1);
+            const userIndex = users.findIndex(u => u.name === currentUser.name);
+            users[userIndex] = currentUser;
+            localStorage.setItem('mathUsersV3', JSON.stringify(users));
+            loadWrongBook();
+        }
+
+        // 个人中心
+        function loadProfile() {
+            document.getElementById('profileName').textContent = `👧 ${currentUser.name}`;
+            document.getElementById('highScore').textContent = currentUser.highScore;
+            document.getElementById('quizCount').textContent = currentUser.quizCount;
+            document.getElementById('wrongCount').textContent = currentUser.wrongQuestions ? currentUser.wrongQuestions.length : 0;
+
+            const sortedUsers = [...users].sort((a, b) => b.highScore - a.highScore);
+            let html = '';
+            sortedUsers.forEach((user, i) => {
+                const isCurrent = currentUser && user.name === currentUser.name;
+                html += `
+                    <div class="rank-item ${isCurrent ? 'current-user' : ''}">
+                        <div class="rank-number ${i < 3 ? 'rank-' + (i + 1) : 'rank-other'}">
+                            ${i + 1}
+                        </div>
+                        <div class="rank-info">
+                            <div class="rank-name">${user.name} ${isCurrent ? '(你)' : ''}</div>
+                            <div class="rank-score">最高分：${user.highScore} 分 | 答题次数：${user.quizCount}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('rankList').innerHTML = html || '<p style="text-align:center;color:var(--文字灰);">还没有人答题，快来当第一个！</p>';
+        }
+
+        // 初始化
+        initQuote();
+    </script>
+</body>
+
+</html>
